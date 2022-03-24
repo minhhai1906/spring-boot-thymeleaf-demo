@@ -1,35 +1,30 @@
 package com.minhhai.thymeleafdemo.controller;
 
-import com.minhhai.thymeleafdemo.model.Employee;
+import com.minhhai.thymeleafdemo.entity.Employee;
+import com.minhhai.thymeleafdemo.service.EmployeeService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import javax.annotation.PostConstruct;
-import java.util.ArrayList;
+
 import java.util.List;
 
 @Controller
 @RequestMapping("/employees")
 public class EmployeeController {
-    private List<Employee> employeeList;
+    private EmployeeService employeeService;
 
-    @PostConstruct
-    private void loadData(){
-        Employee employee1 = new Employee(1, "King", "Luis", "king@luv2code.com");
-        Employee employee2 = new Employee(2, "Johnathan", "Travel", "johnathan@luv2code.com");
-        Employee employee3 = new Employee(3, "Mary", "Jane", "mary@luv2code.com");
-
-        employeeList = new ArrayList<>();
-        employeeList.add(employee1);
-        employeeList.add(employee2);
-        employeeList.add(employee3);
+    @Autowired
+    public EmployeeController(EmployeeService employeeService) {
+        this.employeeService = employeeService;
     }
 
     @GetMapping("/list")
     public String listEmployees(Model model){
-        model.addAttribute("employees", employeeList);
+        List<Employee> all = employeeService.findAll();
+        model.addAttribute("employees", all);
         return "list-employees";
     }
 
